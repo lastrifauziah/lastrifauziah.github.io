@@ -1,0 +1,38 @@
+name: Renew SSL Certificate
+
+on:
+  schedule:
+    # Jadwal untuk menjalankan workflow.
+    # Format: 'menit jam hari-bulan bulan hari-minggu' (UTC)
+    # Contoh di bawah: Menjalankan setiap tanggal 1 setiap bulan, pada pukul 03:00 UTC.
+    # Karena SSL Let's Encrypt berlaku 90 hari, menjalankan sebulan sekali sudah cukup.
+    # Kamu bisa menyesuaikannya jika ingin lebih sering atau kurang sering.
+    # Perhatikan: Waktu di sini adalah UTC (Coordinated Universal Time).
+    # Jika sekarang WIB (GMT+7), jam 03:00 UTC berarti jam 10:00 WIB.
+    - cron: '0 3 1 * *' 
+
+  workflow_dispatch: # Ini memungkinkan kamu untuk menjalankan workflow secara manual dari antarmuka GitHub Actions.
+                   # Berguna untuk pengujian atau jika kamu perlu memperbarui di luar jadwal.
+
+jobs:
+  renew_ssl:
+    runs-on: ubuntu-latest # Runner yang akan digunakan untuk menjalankan workflow (lingkungan Linux)
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4 # Mengambil kode dari repositori kamu ke runner GitHub
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.x' # Mengatur versi Python yang akan digunakan (misalnya 3.9, 3.10, dll.)
+
+    - name: Install dependencies
+      run: |
+        pip install requests # Menginstal library 'requests' yang dibutuhkan oleh skrip Python
+
+    - name: Run SSL Renewal Script
+      env: # Mengatur variabel lingkungan yang akan diakses oleh skrip Python
+        DNS_EXIT_API_KEY: ${{ secrets.DNS_EXIT_API_KEY }} # Mengambil API Key dari GitHub Secrets yang sudah kamu buat
+        DOMAIN_TO_RENEW: cerita.mywp.info # <<< INI DIA DOMAIN KAMU YANG BENAR
+      run: python scripts/renew_ssl.py # Menjalankan skrip Python kamu
