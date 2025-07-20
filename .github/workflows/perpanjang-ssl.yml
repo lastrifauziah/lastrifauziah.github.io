@@ -9,7 +9,7 @@ on:
     # Kamu bisa menyesuaikannya jika ingin lebih sering atau kurang sering.
     # Perhatikan: Waktu di sini adalah UTC (Coordinated Universal Time).
     # Jika sekarang WIB (GMT+7), jam 03:00 UTC berarti jam 10:00 WIB.
-    - cron: '0 3 1 * *' 
+    - cron: '0 3 18 * *' 
 
   workflow_dispatch: # Ini memungkinkan kamu untuk menjalankan workflow secara manual dari antarmuka GitHub Actions.
                    # Berguna untuk pengujian atau jika kamu perlu memperbarui di luar jadwal.
